@@ -1,0 +1,11 @@
+C:\Users\CopperBot\.CLion2017.3\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/d/Users/GmHtAf/Documents/Enseirb/L2/S8/EN211_systeme_programmable/plasma_pmod/C/tools
+-- The C compiler identification is GNU 7.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /cygdrive/d/Users/GmHtAf/Documents/Enseirb/L2/S8/EN211_systeme_programmable/plasma_pmod/C/tools/cmake-build-debug
