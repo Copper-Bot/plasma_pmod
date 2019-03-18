@@ -5,6 +5,36 @@
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A,V) *(volatile unsigned int*)(A)=(V)
 
+#define WHITE 		0xFFFF
+#define BLACK			0x0000
+#define MAX_X			96
+#define MAX_Y			64
+#define OLED_SIZE (96*64)
+#define RED				0xF800
+#define GREEN 		0x07C0
+#define BLUE			0x001F
+
+#define L_CLICK 		0
+#define MID_CLICK		1
+#define R_CLICK			2
+#define X_POS				3
+#define Y_POS 			4
+#define Z_POS 			5
+
+#define TOUCHE 0
+#define APPUI  5
+#define A	10
+#define B	11
+#define C	12
+#define D	13
+#define E	14
+#define F	15
+
+#define PENCIL	10
+#define ERASER	11
+
+#define SQUARE			0
+
 //Function used to color a pixel at a given position (row, col)
 void printPixel(char row, char col, int color)
 {
@@ -17,139 +47,111 @@ void printPixel(char row, char col, int color)
 	MemoryWrite(OLED_BITMAP_RW, buff);
 }
 
-void rgb_oled_bitmap(void)
-{
+void init_oled_bitmap(){
 	MemoryWrite(OLED_MUX, OLED_MUX_BITMAP);
 	MemoryWrite(OLED_BITMAP_RST, 1); // Reset the oled_rgb PMOD
-
-	// 'O'
-	printPixel(25, 32, 0xF800);
-	printPixel(25, 33, 0xF800);
-	printPixel(25, 34, 0xF800);
-	printPixel(25, 35, 0xF800);
-	printPixel(25, 36, 0xF800);
-	
-	printPixel(31, 32, 0xF800);
-	printPixel(31, 33, 0xF800);
-	printPixel(31, 34, 0xF800);
-	printPixel(31, 35, 0xF800);
-	printPixel(31, 36, 0xF800);
-	
-	printPixel(26, 32, 0xF800);
-	printPixel(27, 32, 0xF800);
-	printPixel(28, 32, 0xF800);
-	printPixel(29, 32, 0xF800);
-	printPixel(30, 32, 0xF800);
-	
-	printPixel(26, 36, 0xF800);
-	printPixel(27, 36, 0xF800);
-	printPixel(28, 36, 0xF800);
-	printPixel(29, 36, 0xF800);
-	printPixel(30, 36, 0xF800);
-	
-	
-	// 'K'
-	printPixel(25, 42, 0x07C0);	
-	printPixel(26, 42, 0x07C0);
-	printPixel(27, 42, 0x07C0);
-	printPixel(28, 42, 0x07C0);
-	printPixel(29, 42, 0x07C0);
-	printPixel(30, 42, 0x07C0);
-	printPixel(31, 42, 0x07C0);
-	
-	printPixel(29, 43, 0x07C0);
-	printPixel(28, 44, 0x07C0);
-	printPixel(27, 45, 0x07C0);
-	printPixel(26, 46, 0x07C0);
-	printPixel(25, 47, 0x07C0);
-	
-	printPixel(29, 45, 0x07C0);
-	printPixel(30, 46, 0x07C0);
-	printPixel(31, 47, 0x07C0);
-	
-	
-	// '!'
-	printPixel(25, 53, 0x001F);	
-	printPixel(26, 53, 0x001F);
-	printPixel(27, 53, 0x001F);
-	printPixel(28, 53, 0x001F);
-	printPixel(31, 53, 0x001F);
 }
 
-
-void printCar( char row, char col, char car)
-{
-	int buff = 0x00000000;
-
-	buff = col;
-	buff = (buff << 8) | row;
-	buff = (buff << 8) | car;
-
-	while( !MemoryRead(OLED_CHARMAP_RW) ) {}
-		MemoryWrite(OLED_CHARMAP_RW, buff);
-}
-
-void rgb_oled_charmap(void)
-{
-	char row = 0x00;
-	char col = 0x00;
-	char car = 0x41;
-
-	MemoryWrite(OLED_MUX, OLED_MUX_CHARMAP);
-	MemoryWrite(OLED_CHARMAP_RST, 1); // reset the oled_rgb
-
-	while( !MemoryRead(OLED_CHARMAP_RW)) {}		//Screen Clear (Black Background by defaulf)
-		MemoryWrite(OLED_CHARMAP_RW, 0x01000000);
-
-	for( row = 0; row < 2; row++ ) {
-		for( col = 0; col < 16; col++ ) {
-			printCar( row, col, car);
-			car++;
+void refresh(){
+	for (int i = 0; i < MAX_Y; i++) {
+		for (int j = 0; j < MAX_X; j++) {
+			printPixel(i,j,WHITE);
 		}
 	}
 }
 
-int bufferLength(const char* buffer)
-{
-    int lenght = 0;
-    char caracterPointed = 0;
-
-    do
-    {
-        caracterPointed = buffer[lenght];
-        lenght++;
-    }
-    while(caracterPointed != '\0');
-
-    lenght--; // -1 because of \0
-
-    return lenght;
+int pix_on_screen(int x, int y){
+	return( !((x<0) || (y<0) || (x>(MAX_X-1)) || (y>(MAX_Y-1))) );
 }
 
-
-void rgb_oled_terminal(void)
-{
-	char buffer[16] =  "PLASPAINT";                  
-	int i;
-
-	MemoryWrite(OLED_MUX, OLED_MUX_TERMINAL);
-	MemoryWrite(OLED_TERMINAL_RST, 1); // reset the oled_rgb
-
-	// Screen Clear (Black Background by defaulf)
-	while(!MemoryRead(OLED_TERMINAL_RW)) {}
-		MemoryWrite(OLED_TERMINAL_RW, 0x01000000);
-
-	for (i = 0; i < bufferLength(buffer); i++) {
-		while(!MemoryRead(OLED_TERMINAL_RW)) {}
-	   		MemoryWrite(OLED_TERMINAL_RW, buffer[i]);
+void paint_background(int color){
+	for (int i = 0; i < MAX_Y; i++) {
+		for (int j = 0; j < MAX_X; j++) {
+			printPixel(i,j,color);
+		}
 	}
 }
 
+void paint_area(int x, int y, int shape, int size, int color){
+	int i = 0;
+	int j = 0;
+	int t_pos_x = x;
+	int t_pos_y = y;
+
+	if (shape==SQUARE) {
+		for (i = 0; i < 2*size; i++) {
+			for (j = 0; j < 2*size; j++) {
+				t_pos_y = (y-size)+i;
+				t_pos_x = (x-size)+j;
+				if (pix_on_screen(t_pos_x, t_pos_y)) {
+					printPixel(t_pos_y,t_pos_x, color);
+				}
+			}
+		}
+	}
+
+}
+
+void pencil(int mouse_left_click, int x, int y, int color, int size, int shape){
+	if (mouse_left_click == 1)
+	{
+		paint_area(x, y, shape, size, color);
+	}
+}
+
+void eraser(int mouse_left_click, int x, int y, int size){
+	pencil(mouse_left_click, x, y, WHITE, size, SQUARE);
+}
+
+void get_mouse(int *mouse){
+	mouse[X_POS]			= MemoryRead(MOUSE_X);
+	mouse[Y_POS] 			= MemoryRead(MOUSE_Y);
+	mouse[Z_POS] 			= MemoryRead(MOUSE_Z);
+	mouse[L_CLICK]  	= MemoryRead(MOUSE_BUTTONS)&0x00000001;
+	mouse[MID_CLICK]  = (MemoryRead(MOUSE_BUTTONS)>>1)&0x00000001;
+	mouse[R_CLICK]  	= (MemoryRead(MOUSE_BUTTONS)>>2)&0x00000001;
+}
+
+void home_screen(){
+/*
+	int z = 0;
+	for (int i = 0; i < MAX_Y; i++) {
+		for (int j = 0; j < MAX_X; j++) {
+			printPixel(i,j, plaspaint_home[z++]<<8);
+		}
+	}
+*/
+
+}
+void get_keyb(int *keyb) {
+	keyb[APPUI]  = (MemoryRead(KEYS_DECODE)>>8)&0x00000001;
+	keyb[TOUCHE] = MemoryRead(KEYS_DECODE)&0x0000000F;
+}
+
+
 int main(int argc, char ** argv)
 {
-//	rgb_oled_charmap();
-//	rgb_oled_bitmap();
-	rgb_oled_terminal();
+	int mouse[6]={0};
+	int keyb[6] ={0};
+	init_oled_bitmap();
+	refresh();
+	home_screen();
 
-	while(1) ;
+	do{
+	get_mouse(mouse);
+	get_keyb(keyb);
+
+	if (keyb[TOUCHE] == 1) {
+		pencil(mouse[L_CLICK], mouse[X_POS], mouse[Y_POS], RED, 10, SQUARE);
+		if ( keyb[APPUI]== 0) {
+			paint_background(BLACK);
+		}
+	}
+
+	if (mouse[R_CLICK] == 1) {
+		refresh();
+	}
+
+	}while(1);
+
 }

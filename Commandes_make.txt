@@ -1,0 +1,11 @@
+Pour compiler et envoyer un exemple :
+
+(rajouter "v=1" dans les commandes make pour activer le retour verbose)
+
+1) make boot_loader
+2) make plasma
+3) Utiliser Vivado pour upload le bitstream
+4) make project CONFIG_PROJECT=plaspaint
+(  5) tapez <ls /dev/tty* > pour trouver le bon port (à modifier dans le Makefile)  )
+6) make send CONFIG_PROJECT=plaspaint
+
