@@ -114,6 +114,15 @@ BUILD_DIRS += $(OBJ)/rgb_oled
 BUILD_BINS += $(BIN)/rgb_oled.bin
 PROJECTS += $(RGB_OLED)
 
+PLASPAINT = $(BIN)/plaspaint.bin
+PLASPAINT_HDL = $(BIN)/plaspaint.txt
+PLASPAINT_FILES = main.c
+PLASPAINT_SOURCES = $(addprefix $(C)/plaspaint/Sources/,$(PLASPAINT_FILES))
+PLASPAINT_OBJECTS = $(addprefix $(OBJ)/plaspaint/,$(PLASPAINT_FILES:.c=.o))
+BUILD_DIRS += $(OBJ)/plaspaint
+BUILD_BINS += $(BIN)/plaspaint.bin
+PROJECTS += $(PLASPAINT)
+
 SWITCH_LED = $(BIN)/switch_led.bin
 SWITCH_LED_HDL = $(BIN)/switch_led.txt
 SWITCH_LED_FILES = main.c
@@ -202,6 +211,10 @@ PLASMA_SOC_FILES = alu.vhd \
 	txt_util.vhd \
 	vga_bitmap_160x100.vhd \
 	vga_ctrl.vhd \
+	Ps2Interface.vhd \
+	ctrl_mouse_plasma.vhd \
+	ctrl_keyb_v2.vhd \
+	MouseCtl.vhd \
 	vgd_bitmap_640x480.vhd
 PLASMA_SOC_SOURCES = $(addprefix $(PLASMA)/,$(PLASMA_SOC_FILES))
 PLASMA_SOC_SOURCES += $(PLASMA_CUSTOM_SOURCES)
@@ -218,7 +231,7 @@ BUILD_DIRS += $(OBJ)/plasma
 # Configuration
 
 CONFIG_PROJECT ?= tsi
-CONFIG_TARGET ?= nexys4
+CONFIG_TARGET ?= nexys4_DDR
 CONFIG_PART ?= xc7a100tcsg324-1
 CONFIG_SERIAL ?= /dev/ttyUSB1
 CONFIG_UART ?= yes
@@ -248,6 +261,9 @@ PROJECT_HDL = $(BUTTONS_HDL)
 else ifeq ($(CONFIG_PROJECT),rgb_oled)
 PROJECT = $(RGB_OLED)
 PROJECT_HDL = $(RGB_OLED_HDL)
+else ifeq ($(CONFIG_PROJECT),plaspaint)
+PROJECT = $(PLASPAINT)
+PROJECT_HDL = $(PLASPAINT_HDL)
 else ifeq ($(CONFIG_PROJECT),switch_led)
 PROJECT = $(SWITCH_LED)
 PROJECT_HDL = $(SWITCH_LED_HDL)
@@ -462,6 +478,22 @@ $(RGB_OLED_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(RGB_OLED_OBJECTS) $(C
 
 .PHONY: rgb_oled
 rgb_oled: $(RGB_OLED) $(RGB_OLED_HDL)
+
+$(PLASPAINT_OBJECTS): $(OBJ)/plaspaint/%.o: $(C)/plaspaint/Sources/%.c | $(BUILD_DIRS)
+	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<
+
+$(PLASPAINT): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(PLASPAINT_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_LOAD) -eentry -Map $(OBJ)/plaspaint/plaspaint.map -s -N -o $(OBJ)/plaspaint/plaspaint.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(PLASPAINT_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/plaspaint/plaspaint.axf $(OBJ)/plaspaint/plaspaint.bin $(OBJ)/plaspaint/plaspaint.txt
+	cp $(OBJ)/plaspaint/plaspaint.bin $@
+
+$(PLASPAINT_HDL): $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(PLASPAINT_OBJECTS) $(CONVERT_BIN) | $(BUILD_DIRS)
+	$(LD_MIPS) -Ttext $(ENTRY_HDL) -eentry -Map $(OBJ)/plaspaint/plaspaint_hdl.map -s -N -o $(OBJ)/plaspaint/plaspaint_hdl.axf $(SHARED_OBJECTS_ASM) $(SHARED_OBJECTS) $(PLASPAINT_OBJECTS)
+	$(CONVERT_BIN) $(OBJ)/plaspaint/plaspaint_hdl.axf $(OBJ)/plaspaint/plaspaint_hdl.bin $(OBJ)/plaspaint/plaspaint_hdl.txt
+	cp $(OBJ)/plaspaint/plaspaint_hdl.txt $@
+
+.PHONY: plaspaint
+plaspaint: $(PLASPAINT) $(PLASPAINT_HDL)
 
 $(SWITCH_LED_OBJECTS): $(OBJ)/switch_led/%.o: $(C)/switch_led/Sources/%.c | $(BUILD_DIRS)
 	$(CC_MIPS) $(CFLAGS_MIPS) -o $@ $<

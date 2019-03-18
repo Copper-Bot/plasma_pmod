@@ -66,6 +66,13 @@
 --   0x40000200  Seven segment display input
 --   0x40000204  Seven segment display reset
 
+--   0x40000500  Mouse pos X
+--   0x40000504  Mouse pos Y
+--   0x40000508  Mouse pos Z
+--   0x4000050C  Mouse buttons
+
+-- 	 0x40000600	 keys_decode
+
 --   0x80000000  DMA ENGINE (NOT WORKING YET)
 ---------------------------------------------------------------------
 library ieee;
@@ -131,6 +138,12 @@ entity plasma is
 
 				sw           : in  std_logic_vector(15 downto 0);
 				led          : out std_logic_vector(15 downto 0);
+
+				PS2_clk      : inout std_logic;
+				PS2_data     : inout std_logic;
+				
+				Row       	 : in  STD_LOGIC_VECTOR (3 downto 0);
+   				Col       	 : out  STD_LOGIC_VECTOR (3 downto 0);
 
 				RGB1_Red     : out std_logic;
 				RGB1_Green   : out std_logic;
@@ -311,6 +324,12 @@ architecture logic of plasma is
    signal cache_miss        : std_logic;
    signal cache_hit         : std_logic;
 
+   signal mouse_pos_X       : std_logic_vector(31 downto 0);
+   signal mouse_pos_Y       : std_logic_vector(31 downto 0);
+   signal mouse_pos_Z       : std_logic_vector(31 downto 0);
+   signal mouse_buttons     : std_logic_vector(31 downto 0);
+   
+   signal keys_decode		: std_logic_vector(8 downto 0);
 
 	COMPONENT memory_64k
     Port ( clk       : in   STD_LOGIC;
@@ -336,6 +355,37 @@ architecture logic of plasma is
          VGA_green       : out std_logic_vector(3 downto 0);   -- green output
          VGA_blue        : out std_logic_vector(3 downto 0)   -- blue output
       );
+   end component;
+   
+   component ctrl_mouse_plasma is
+     port(
+      	clock			: in  std_logic;
+   		reset			: in  std_logic;
+   		
+   		OUTPUT_X		: out std_logic_vector(31 downto 0);
+   		OUTPUT_Y		: out std_logic_vector(31 downto 0);
+   		OUTPUT_Z		: out std_logic_vector(31 downto 0);
+   		
+   	    BOUTON_L        : out std_logic;
+        BOUTON_M        : out std_logic;
+        BOUTON_R        : out std_logic;
+   		
+   		ps2_clk     : inout std_logic;
+   		ps2_data    : inout std_logic
+   		
+   );
+   end component;
+   
+   component decod_keyb is
+       Port (
+   			clk       : in  STD_LOGIC;
+   			Raz       : in  STD_LOGIC;
+       		Row       : in  STD_LOGIC_VECTOR (3 downto 0);
+   			Col       : out  STD_LOGIC_VECTOR (3 downto 0);
+       		DecodeOut : out  STD_LOGIC_VECTOR (8 downto 0) -- Info appui MSB (0 : appuyé) 
+   	--|	 8	    |     7       |     6      |      5      |      4      | 3 | 2 | 1 | 0 |
+   	--| 1 bouton appuyé | Appui col 1 | Apui col 2 | Appui col 3 | Appui col 4 |     Touche    |
+   	);
    end component;
    
    component VGA_bitmap_640x480 is
@@ -788,6 +838,11 @@ end generate;
 			when x"400004AC" => cpu_data_r <= oledterminal_output;
 			when x"400004B8" => cpu_data_r <= oledbitmap_output;
 			when x"400004D8" => cpu_data_r <= oledsigplot_output;
+			when x"40000500" => cpu_data_r <= mouse_pos_X; 
+			when x"40000504" => cpu_data_r <= mouse_pos_Y;
+			when x"40000508" => cpu_data_r <= mouse_pos_Z; 
+            when x"4000050C" => cpu_data_r <= mouse_buttons;
+            when x"40000600" => cpu_data_r <= "00000000000000000000000"&keys_decode;
 			when others => cpu_data_r <= x"FFFFFFFF";
 		end case;
 
@@ -1168,6 +1223,32 @@ end generate;
 		data_w      => cpu_data_w,
 		pause_out   => eth_pause
 	);
+	
+	plasma_mouse: ctrl_mouse_plasma port map(
+	
+	   	clock		=> clk,	
+		reset		=> reset,	
+		OUTPUT_X	=> mouse_pos_X,
+		OUTPUT_Y	=> mouse_pos_Y,
+		OUTPUT_Z	=> mouse_pos_Z,
+		
+		BOUTON_L    => mouse_buttons(0),
+        BOUTON_M    => mouse_buttons(1),
+        BOUTON_R    => mouse_buttons(2),
+		
+		ps2_clk     => ps2_clk,
+		ps2_data    => ps2_data
+	
+	);
+	
+	plasma_keys: decod_keyb port map(
+		clk        => clk,
+		Raz        => reset,
+	    Row        => row,
+		Col        => col,
+	    DecodeOut  => keys_decode
+	);
+	
 
 
 	------------------------------------------------------------------------------------------------------

@@ -41,6 +41,12 @@ entity top_plasma is
    sw           : in  std_logic_vector(15 downto 0);
    led          : out std_logic_vector(15 downto 0);
 
+   PS2_clk     : inout std_logic;
+   PS2_data    : inout std_logic;
+   
+   Row       	 : in  STD_LOGIC_VECTOR (3 downto 0);
+   Col       	 : out STD_LOGIC_VECTOR (3 downto 0);
+
    RGB1_Red     : out std_logic;
    RGB1_Green   : out std_logic;
    RGB1_Blue    : out std_logic;
@@ -162,6 +168,12 @@ end process;
 
 		sw        => sw,
 		led       => led,
+
+		PS2_clk    => PS2_CLK,
+		PS2_data   => PS2_DATA,
+		
+		Row        => Row,
+   		Col        => Col, 
 
 		RGB1_Red => RGB1_Red,
 		RGB1_Green => RGB1_Green,

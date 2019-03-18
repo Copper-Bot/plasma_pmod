@@ -47,6 +47,18 @@
 #define OLED_SIGPLOT_RST  0x400004D0
 #define OLED_SIGPLOT_RW   0x400004D8
 
+
+//MOUSE : pris en charge d'une souris branché en USB sur la Nexys 4
+#define MOUSE_X           0x40000500
+#define MOUSE_Y           0x40000504
+#define MOUSE_Z           0x40000508
+#define MOUSE_BUTTONS     0x4000050C
+	
+//KEYS_DECODE : PMOD clavier à touches
+//|			8		 |     7       |     6      |      5      |      4      | 3 | 2 | 1 | 0 |
+//| 1 bouton appuyÃ© | Appui col 1 | Apui col 2 | Appui col 3 | Appui col 4 |     Touche    |
+#define KEYS_DECODE       0x40000600
+
 #define OLED_MUX_CHARMAP  0x01
 #define OLED_MUX_BITMAP   0x02
 #define OLED_MUX_TERMINAL 0x03
@@ -72,5 +84,6 @@
 /*********** Ethernet buffers ************/
 #define ETHERNET_RECEIVE  0x13ff0000
 #define ETHERNET_TRANSMIT 0x13fe0000
+
 
 #endif //__PLASMA_H__
