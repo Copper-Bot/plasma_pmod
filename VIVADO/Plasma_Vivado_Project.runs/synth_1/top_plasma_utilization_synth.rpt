@@ -1,0 +1,197 @@
+Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2015.2 (win64) Build 1266856 Fri Jun 26 16:35:25 MDT 2015
+| Date         : Mon Mar 18 09:41:25 2019
+| Host         : CopperPuter running 64-bit major release  (build 9200)
+| Command      : report_utilization -file top_plasma_utilization_synth.rpt -pb top_plasma_utilization_synth.pb
+| Design       : top_plasma
+| Device       : xc7a100t
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Slice Logic
+1.1 Summary of Registers by Type
+2. Memory
+3. DSP
+4. IO and GT Specific
+5. Clocking
+6. Specific Feature
+7. Primitives
+8. Black Boxes
+9. Instantiated Netlists
+
+1. Slice Logic
+--------------
+
++----------------------------+--------+-------+-----------+--------+
+|          Site Type         |  Used  | Fixed | Available |  Util% |
++----------------------------+--------+-------+-----------+--------+
+| Slice LUTs*                | 206256 |     0 |     63400 | 325.32 |
+|   LUT as Logic             |  77687 |     0 |     63400 | 122.53 |
+|   LUT as Memory            | 128569 |     0 |     19000 | 676.68 |
+|     LUT as Distributed RAM | 128566 |     0 |           |        |
+|     LUT as Shift Register  |      3 |     0 |           |        |
+| Slice Registers            |   2530 |     0 |    126800 |   2.00 |
+|   Register as Flip Flop    |   2529 |     0 |    126800 |   1.99 |
+|   Register as Latch        |      1 |     0 |    126800 |  <0.01 |
+| F7 Muxes                   |  72623 |     0 |     31700 | 229.09 |
+| F8 Muxes                   |   6464 |     0 |     15850 |  40.78 |
++----------------------------+--------+-------+-----------+--------+
+* Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
+
+
+1.1 Summary of Registers by Type
+--------------------------------
+
++-------+--------------+-------------+--------------+
+| Total | Clock Enable | Synchronous | Asynchronous |
++-------+--------------+-------------+--------------+
+| 0     |            _ |           - |            - |
+| 0     |            _ |           - |          Set |
+| 0     |            _ |           - |        Reset |
+| 0     |            _ |         Set |            - |
+| 0     |            _ |       Reset |            - |
+| 0     |          Yes |           - |            - |
+| 16    |          Yes |           - |          Set |
+| 1155  |          Yes |           - |        Reset |
+| 90    |          Yes |         Set |            - |
+| 1269  |          Yes |       Reset |            - |
++-------+--------------+-------------+--------------+
+
+
+2. Memory
+---------
+
++-------------------+------+-------+-----------+-------+
+|     Site Type     | Used | Fixed | Available | Util% |
++-------------------+------+-------+-----------+-------+
+| Block RAM Tile    |    2 |     0 |       135 |  1.48 |
+|   RAMB36/FIFO*    |    0 |     0 |       135 |  0.00 |
+|   RAMB18          |    4 |     0 |       270 |  1.48 |
+|     RAMB18E1 only |    4 |       |           |       |
++-------------------+------+-------+-----------+-------+
+* Note: Each Block RAM Tile only has one FIFO logic available and therefore can accommodate only one FIFO36E1 or one FIFO18E1. However, if a FIFO18E1 occupies a Block RAM Tile, that tile can still accommodate a RAMB18E1
+
+
+3. DSP
+------
+
++----------------+------+-------+-----------+-------+
+|    Site Type   | Used | Fixed | Available | Util% |
++----------------+------+-------+-----------+-------+
+| DSPs           |    9 |     0 |       240 |  3.75 |
+|   DSP48E1 only |    9 |       |           |       |
++----------------+------+-------+-----------+-------+
+
+
+4. IO and GT Specific
+---------------------
+
++-----------------------------+------+-------+-----------+-------+
+|          Site Type          | Used | Fixed | Available | Util% |
++-----------------------------+------+-------+-----------+-------+
+| Bonded IOB                  |   97 |     0 |       210 | 46.19 |
+| Bonded IPADs                |    0 |     0 |         2 |  0.00 |
+| PHY_CONTROL                 |    0 |     0 |         6 |  0.00 |
+| PHASER_REF                  |    0 |     0 |         6 |  0.00 |
+| OUT_FIFO                    |    0 |     0 |        24 |  0.00 |
+| IN_FIFO                     |    0 |     0 |        24 |  0.00 |
+| IDELAYCTRL                  |    0 |     0 |         6 |  0.00 |
+| IBUFGDS                     |    0 |     0 |       202 |  0.00 |
+| PHASER_OUT/PHASER_OUT_PHY   |    0 |     0 |        24 |  0.00 |
+| PHASER_IN/PHASER_IN_PHY     |    0 |     0 |        24 |  0.00 |
+| IDELAYE2/IDELAYE2_FINEDELAY |    0 |     0 |       300 |  0.00 |
+| IBUFDS_GTE2                 |    0 |     0 |         4 |  0.00 |
+| ILOGIC                      |    0 |     0 |       210 |  0.00 |
+| OLOGIC                      |    0 |     0 |       210 |  0.00 |
++-----------------------------+------+-------+-----------+-------+
+
+
+5. Clocking
+-----------
+
++------------+------+-------+-----------+-------+
+|  Site Type | Used | Fixed | Available | Util% |
++------------+------+-------+-----------+-------+
+| BUFGCTRL   |    2 |     0 |        32 |  6.25 |
+| BUFIO      |    0 |     0 |        24 |  0.00 |
+| MMCME2_ADV |    0 |     0 |         6 |  0.00 |
+| PLLE2_ADV  |    0 |     0 |         6 |  0.00 |
+| BUFMRCE    |    0 |     0 |        12 |  0.00 |
+| BUFHCE     |    0 |     0 |        96 |  0.00 |
+| BUFR       |    0 |     0 |        24 |  0.00 |
++------------+------+-------+-----------+-------+
+
+
+6. Specific Feature
+-------------------
+
++-------------+------+-------+-----------+-------+
+|  Site Type  | Used | Fixed | Available | Util% |
++-------------+------+-------+-----------+-------+
+| BSCANE2     |    0 |     0 |         4 |  0.00 |
+| CAPTUREE2   |    0 |     0 |         1 |  0.00 |
+| DNA_PORT    |    0 |     0 |         1 |  0.00 |
+| EFUSE_USR   |    0 |     0 |         1 |  0.00 |
+| FRAME_ECCE2 |    0 |     0 |         1 |  0.00 |
+| ICAPE2      |    0 |     0 |         2 |  0.00 |
+| PCIE_2_1    |    0 |     0 |         1 |  0.00 |
+| STARTUPE2   |    0 |     0 |         1 |  0.00 |
+| XADC        |    0 |     0 |         1 |  0.00 |
++-------------+------+-------+-----------+-------+
+
+
+7. Primitives
+-------------
+
++----------+--------+---------------------+
+| Ref Name |  Used  | Functional Category |
++----------+--------+---------------------+
+| RAMD64E  | 118272 |  Distributed Memory |
+| MUXF7    |  72623 |               MuxFx |
+| LUT6     |  67677 |                 LUT |
+| RAMS64E  |  10240 |  Distributed Memory |
+| LUT3     |   7816 |                 LUT |
+| MUXF8    |   6464 |               MuxFx |
+| LUT4     |   5230 |                 LUT |
+| LUT5     |   1578 |                 LUT |
+| LUT2     |   1402 |                 LUT |
+| FDRE     |   1269 |        Flop & Latch |
+| FDCE     |   1154 |        Flop & Latch |
+| LUT1     |    656 |                 LUT |
+| CARRY4   |    399 |          CarryLogic |
+| FDSE     |     90 |        Flop & Latch |
+| RAMD32   |     72 |  Distributed Memory |
+| OBUF     |     56 |                  IO |
+| IBUF     |     34 |                  IO |
+| RAMS32   |     30 |  Distributed Memory |
+| FDPE     |     16 |        Flop & Latch |
+| OBUFT    |     13 |                  IO |
+| DSP48E1  |      9 |    Block Arithmetic |
+| RAMB18E1 |      4 |        Block Memory |
+| SRL16E   |      3 |  Distributed Memory |
+| BUFG     |      2 |               Clock |
+| LDCE     |      1 |        Flop & Latch |
++----------+--------+---------------------+
+
+
+8. Black Boxes
+--------------
+
++----------+------+
+| Ref Name | Used |
++----------+------+
+
+
+9. Instantiated Netlists
+------------------------
+
++----------+------+
+| Ref Name | Used |
++----------+------+
+
+

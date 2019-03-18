@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2015.2 (64-bit)
+# SW Build 1266856 on Fri Jun 26 16:35:25 MDT 2015
+# IP Build 1264090 on Wed Jun 24 14:22:01 MDT 2015
+# Start of session at: Mon Mar 18 08:21:36 2019
+# Process ID: 8424
+# Log file: D:/Users/GmHtAf/Documents/Enseirb/L2/S8/EN211_systeme_programmable/plasma_pmod/VIVADO/Plasma_Vivado_Project.runs/impl_1/top_plasma.vdi
+# Journal file: D:/Users/GmHtAf/Documents/Enseirb/L2/S8/EN211_systeme_programmable/plasma_pmod/VIVADO/Plasma_Vivado_Project.runs/impl_1\vivado.jou
+#-----------------------------------------------------------
+source top_plasma.tcl -notrace
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
