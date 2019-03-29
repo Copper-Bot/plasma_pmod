@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
 	// Initialisation du programme
 	init_oled_bitmap();
 	initSketch();
+	initChromaticSketch();
 	clearSketch(WHITE);
 
 	//Boucle infinie
@@ -22,7 +23,7 @@ int main(int argc, char **argv) {
 
 
 		// MODE HOME SCREEN
-		if (displayMode == 0) {
+		if (displayMode == MODE_HOMESCREEN) {
 			home_screen();
 			if (mouse[L_CLICK] == 1) {
 				displayMode = 1;
@@ -31,7 +32,7 @@ int main(int argc, char **argv) {
 
 
 		// MODE DESSIN DE BASE
-		if (displayMode == 1) {
+		if (displayMode == MODE_NORMAL) {
 
 			// Mis à jour du curseur
 			updateCursor(mouse[X_POS], mouse[Y_POS]);
@@ -53,6 +54,21 @@ int main(int argc, char **argv) {
 
 			// Affichage du skecth sur lequel on travail
 			displaySketch();
+
+			if (mouse[MID_CLICK] == 1)
+				displayMode = MODE_CHROMATIC;
+		}
+
+		// Mode chromatic, choix de la couleur
+		if (displayMode == MODE_CHROMATIC){
+
+			// Mis à jour du curseur
+			updateCursor(mouse[X_POS], mouse[Y_POS]);
+
+			// Affichage de la palette de couleurs
+			displayChromaticScaleColors();
+			if (mouse[MID_CLICK] == 0)
+				displayMode = MODE_NORMAL;
 		}
 
 

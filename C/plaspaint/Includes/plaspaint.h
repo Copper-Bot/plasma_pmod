@@ -7,6 +7,10 @@
 #define MemoryRead(A)     (*(volatile unsigned int*)(A))
 #define MemoryWrite(A, V) *(volatile unsigned int*)(A)=(V)
 
+#define MODE_HOMESCREEN 0
+#define MODE_NORMAL 1
+#define MODE_CHROMATIC 2
+
 #define WHITE        0xFFFF
 #define BLACK            0x0000
 #define MAX_X            96
@@ -51,5 +55,7 @@ void printPixel(char row, char col, int color);
 void initSketch();
 void displaySketch();
 void updateCursor(int x, int y);
+void initChromaticSketch();
+void displayChromaticScaleColors();
 
 #endif
