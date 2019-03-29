@@ -208,33 +208,31 @@ set_property IOSTANDARD LVCMOS33 [get_ports btnD]
 
 
 
-##Pmod Header JA
-##Bank = 15, Pin name = IO_L1N_T0_AD0N_15,					Sch name = JA1
-#set_property PACKAGE_PIN B13 [get_ports {JA[0]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[0]}]
-##Bank = 15, Pin name = IO_L5N_T0_AD9N_15,					Sch name = JA2
-#set_property PACKAGE_PIN F14 [get_ports {JA[1]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[1]}]
-##Bank = 15, Pin name = IO_L16N_T2_A27_15,					Sch name = JA3
-set_property PACKAGE_PIN D17 [get_ports {i2c_scl_pmod}]
-set_property IOSTANDARD LVCMOS33 [get_ports {i2c_scl_pmod}]
-set_property PULLUP true [get_ports {i2c_scl_pmod}]
-##Bank = 15, Pin name = IO_L16P_T2_A28_15,					Sch name = JA4
-set_property PACKAGE_PIN E17 [get_ports {i2c_sda_pmod}]
-set_property IOSTANDARD LVCMOS33 [get_ports {i2c_sda_pmod}]
-set_property PULLUP true [get_ports {i2c_sda_pmod}]
-##Bank = 15, Pin name = IO_0_15,								Sch name = JA7
-#set_property PACKAGE_PIN G13 [get_ports {JA[4]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[4]}]
-##Bank = 15, Pin name = IO_L20N_T3_A19_15,					Sch name = JA8
-#set_property PACKAGE_PIN C17 [get_ports {JA[5]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[5]}]
-##Bank = 15, Pin name = IO_L21N_T3_A17_15,					Sch name = JA9
-#set_property PACKAGE_PIN D18 [get_ports {JA[6]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[6]}]
-##Bank = 15, Pin name = IO_L21P_T3_DQS_15,					Sch name = JA10
-#set_property PACKAGE_PIN E18 [get_ports {JA[7]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JA[7]}]
+#Pmod Header JA
+#Bank = 15, Pin name = IO_L1N_T0_AD0N_15,					Sch name = JA1
+set_property PACKAGE_PIN B13 [get_ports { Col[0] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Col[0] }]
+#Bank = 15, Pin name = IO_L5N_T0_AD9N_15,					Sch name = JA2
+set_property PACKAGE_PIN F14 [get_ports { Col[1] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Col[1] }]
+#Bank = 15, Pin name = IO_L16N_T2_A27_15,					Sch name = JA3
+set_property PACKAGE_PIN D17 [get_ports { Col[2] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Col[2] }]
+#Bank = 15, Pin name = IO_L16P_T2_A28_15,					Sch name = JA4
+set_property PACKAGE_PIN E17 [get_ports { Col[3] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Col[3] }]
+#Bank = 15, Pin name = IO_0_15,								Sch name = JA7
+set_property PACKAGE_PIN G13 [get_ports { Row[0] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Row[0] }]
+#Bank = 15, Pin name = IO_L20N_T3_A19_15,					Sch name = JA8
+set_property PACKAGE_PIN C17 [get_ports { Row[1] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Row[1] }]
+#Bank = 15, Pin name = IO_L21N_T3_A17_15,					Sch name = JA9
+set_property PACKAGE_PIN D18 [get_ports { Row[2] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Row[2] }]
+#Bank = 15, Pin name = IO_L21P_T3_DQS_15,					Sch name = JA10
+set_property PACKAGE_PIN E18 [get_ports { Row[3] }]
+set_property IOSTANDARD LVCMOS33 [get_ports { Row[3] }]
 
 
 
@@ -272,11 +270,13 @@ set_property IOSTANDARD LVCMOS33 [get_ports {OLED_PMOD_EN}]
 #set_property PACKAGE_PIN E7 [get_ports {JC[1]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {JC[1]}]
 ##Bank = 35, Pin name = IO_L22P_T3_35,						Sch name = JC3
-#set_property PACKAGE_PIN J3 [get_ports {JC[2]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JC[2]}]
+set_property PACKAGE_PIN J3 [get_ports {i2c_scl_pmod}]
+set_property IOSTANDARD LVCMOS33 [get_ports {i2c_scl_pmod}]
+set_property PULLUP true [get_ports {i2c_scl_pmod}]
 ##Bank = 35, Pin name = IO_L21P_T3_DQS_35,					Sch name = JC4
-#set_property PACKAGE_PIN J4 [get_ports {JC[3]}]
-#set_property IOSTANDARD LVCMOS33 [get_ports {JC[3]}]
+set_property PACKAGE_PIN J4 [get_ports {i2c_sda_pmod}]
+set_property IOSTANDARD LVCMOS33 [get_ports {i2c_sda_pmod}]
+set_property PULLUP true [get_ports {i2c_sda_pmod}]
 ##Bank = 35, Pin name = IO_L23N_T3_35,						Sch name = JC7
 #set_property PACKAGE_PIN K1 [get_ports {JC[4]}]
 #set_property IOSTANDARD LVCMOS33 [get_ports {JC[4]}]
@@ -502,13 +502,13 @@ set_property IOSTANDARD LVCMOS33 [get_ports o_uart]
 
 ##USB HID (PS/2)
 ##Bank = 35, Pin name = IO_L13P_T2_MRCC_35,					Sch name = PS2_CLK
-#set_property PACKAGE_PIN F4 [get_ports PS2Clk]
-#set_property IOSTANDARD LVCMOS33 [get_ports PS2Clk]
-#set_property PULLUP true [get_ports PS2Clk]
+set_property PACKAGE_PIN F4 [get_ports { PS2_clk }]
+set_property IOSTANDARD LVCMOS33 [get_ports { PS2_clk }]
+set_property PULLUP true [get_ports { PS2_clk }]
 ##Bank = 35, Pin name = IO_L10N_T1_AD15N_35,					Sch name = PS2_DATA
-#set_property PACKAGE_PIN B2 [get_ports PS2Data]
-#set_property IOSTANDARD LVCMOS33 [get_ports PS2Data]
-#set_property PULLUP true [get_ports PS2Data]
+set_property PACKAGE_PIN B2 [get_ports { PS2_data }]
+set_property IOSTANDARD LVCMOS33 [get_ports { PS2_data }]
+set_property PULLUP true [get_ports { PS2_data }]
 
 
 

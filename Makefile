@@ -116,7 +116,7 @@ PROJECTS += $(RGB_OLED)
 
 PLASPAINT = $(BIN)/plaspaint.bin
 PLASPAINT_HDL = $(BIN)/plaspaint.txt
-PLASPAINT_FILES = main.c
+PLASPAINT_FILES = main.c plaspaint.c
 PLASPAINT_SOURCES = $(addprefix $(C)/plaspaint/Sources/,$(PLASPAINT_FILES))
 PLASPAINT_OBJECTS = $(addprefix $(OBJ)/plaspaint/,$(PLASPAINT_FILES:.c=.o))
 BUILD_DIRS += $(OBJ)/plaspaint
@@ -231,7 +231,7 @@ BUILD_DIRS += $(OBJ)/plasma
 # Configuration
 
 CONFIG_PROJECT ?= tsi
-CONFIG_TARGET ?= nexys4_DDR
+CONFIG_TARGET ?= nexys4
 CONFIG_PART ?= xc7a100tcsg324-1
 CONFIG_SERIAL ?= /dev/ttyUSB1
 CONFIG_UART ?= yes

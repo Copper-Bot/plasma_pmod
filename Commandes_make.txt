@@ -2,6 +2,8 @@ Pour compiler et envoyer un exemple :
 
 (rajouter "v=1" dans les commandes make pour activer le retour verbose)
 
+( 0) Optionnel, sur les PC de l'école : "source config.sh" )
+
 1) make boot_loader
 2) make plasma
 3) Utiliser Vivado pour upload le bitstream
