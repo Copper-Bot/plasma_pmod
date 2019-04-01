@@ -41,8 +41,8 @@
 
 #define SQUARE            0
 
-void pencil(int color, int size, int shape);
-void stylo(int color);
+void pencil(int size, int shape);
+void stylo();
 void get_keyb(int *keyb);
 void home_screen();
 void get_mouse(int *mouse);
@@ -58,7 +58,7 @@ void printPixel(char row, char col, int color);
 void initSketch();
 void displaySketch();
 void updateCursor(int x, int y);
-void initChromaticSketch();
 void displayChromaticScaleColors();
+void setColorAndTool();
 
 #endif

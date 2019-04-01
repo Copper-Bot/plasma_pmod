@@ -12,7 +12,6 @@ int main(int argc, char **argv) {
 	// Initialisation du programme
 	init_oled_bitmap();
 	initSketch();
-	initChromaticSketch();
 	clearSketch(WHITE);
 
 	//Boucle infinie
@@ -39,7 +38,7 @@ int main(int argc, char **argv) {
 
 			// Pinceau : Outil de base
 			if (mouse[L_CLICK]) {
-				pencil(RED, 1, SQUARE);
+				pencil(2, SQUARE);
 				//stylo(BLUE);
 			}
 
@@ -71,8 +70,10 @@ int main(int argc, char **argv) {
 
 			// Affichage de la palette de couleurs
 			displayChromaticScaleColors();
-			if (mouse[MID_CLICK] == 0)
+			if (mouse[MID_CLICK] == 0){
+				setColorAndTool();
 				displayMode = MODE_NORMAL;
+			}
 		}
 
 
