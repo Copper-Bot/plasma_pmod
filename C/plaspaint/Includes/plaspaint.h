@@ -41,14 +41,17 @@
 
 #define SQUARE            0
 
-void pencil(int mouse_left_click, int x, int y, int color, int size, int shape);
+void pencil(int color, int size, int shape);
+void stylo(int color);
 void get_keyb(int *keyb);
 void home_screen();
 void get_mouse(int *mouse);
-void eraser(int mouse_left_click, int x, int y, int size);
+void eraser(int size);
 void paintSketchArea(int x, int y, int shape, int size, int color);
 void paint_background(int color);
 int pix_on_screen(int x, int y);
+int isXonScreen(int x);
+int isYonScreen(int y);
 void clearSketch(int color);
 void init_oled_bitmap();
 void printPixel(char row, char col, int color);

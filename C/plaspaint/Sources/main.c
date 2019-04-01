@@ -34,11 +34,15 @@ int main(int argc, char **argv) {
 		// MODE DESSIN DE BASE
 		if (displayMode == MODE_NORMAL) {
 
-			// Mis à jour du curseur
+			// Mis à jour du curseur, obligatoire avant toutes les fonctions de dessins !!!
 			updateCursor(mouse[X_POS], mouse[Y_POS]);
 
 			// Pinceau : Outil de base
-			pencil(mouse[L_CLICK], mouse[X_POS], mouse[Y_POS], RED, 1, SQUARE);
+			if (mouse[L_CLICK]) {
+				pencil(RED, 1, SQUARE);
+				//stylo(BLUE);
+			}
+
 
 			// Test du clavier
 			if (keyb[TOUCHE] == 1) {
