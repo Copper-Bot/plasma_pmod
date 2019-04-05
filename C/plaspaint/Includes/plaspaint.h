@@ -13,6 +13,7 @@
 
 #define WHITE        0xFFFF
 #define BLACK            0x0000
+#define CURSOR_COLOR            0x0000
 #define MAX_X            96
 #define MAX_Y            64
 #define OLED_SIZE 6144
@@ -43,17 +44,19 @@
 
 void pencil(int size, int shape);
 void stylo();
-void get_keyb(int *keyb);
-void home_screen();
-void get_mouse(int *mouse);
+void getKeyb(int *keyb);
+void homeScreen();
+void getMouse(int *mouse);
 void eraser(int size);
 void paintSketchArea(int x, int y, int shape, int size, int color);
-void paint_background(int color);
+void paintAllBackground(int color);
 int pix_on_screen(int x, int y);
 int isXonScreen(int x);
 int isYonScreen(int y);
 void clearSketch(int color);
-void init_oled_bitmap();
+void initOledBitmap();
+int isInCursorZone(char i, char j);
+void printPixelAndCursor(char row, char col, int color);
 void printPixel(char row, char col, int color);
 void initSketch();
 void displaySketch();

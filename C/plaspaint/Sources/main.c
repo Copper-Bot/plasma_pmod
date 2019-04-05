@@ -10,22 +10,22 @@ int displayMode = 0;
 int main(int argc, char **argv) {
 
 	// Initialisation du programme
-	init_oled_bitmap();
+	initOledBitmap();
 	initSketch();
 	clearSketch(WHITE);
 
 	//Boucle infinie
 	do {
 		// Mis à jour des valeurs de la souris et du clavier
-		get_mouse(mouse);
-		get_keyb(keyb);
+		getMouse(mouse);
+		getKeyb(keyb);
 
 
 		// MODE HOME SCREEN
 		if (displayMode == MODE_HOMESCREEN) {
-			home_screen();
+			homeScreen();
 			if (mouse[L_CLICK] == 1) {
-				displayMode = 1;
+				displayMode = MODE_NORMAL;
 			}
 		}
 
@@ -42,11 +42,10 @@ int main(int argc, char **argv) {
 				//stylo(BLUE);
 			}
 
-
-			// Test du clavier
+			// DEBUG : Test du clavier
 			if (keyb[TOUCHE] == 1) {
 				if (keyb[APPUI] == 0) {
-					paint_background(BLACK);
+					paintAllBackground(BLACK);
 				}
 			}
 
@@ -70,6 +69,8 @@ int main(int argc, char **argv) {
 
 			// Affichage de la palette de couleurs
 			displayChromaticScaleColors();
+
+			// Si l'utilisateur relache le bouton du milieu, on valide la sélection de la couleur
 			if (mouse[MID_CLICK] == 0){
 				setColorAndTool();
 				displayMode = MODE_NORMAL;
