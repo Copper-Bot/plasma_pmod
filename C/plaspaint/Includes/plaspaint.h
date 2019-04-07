@@ -41,14 +41,12 @@
 #define CURSOR_CENTER (MAX_CURSOR_MATRIX/2)
 
 // Outils :
-#define PENCIL_SQUARE 0
-#define PENCIL_CIRCLE 1
-#define PENCIL_POINT  2
-#define PENCIL_DIAGONAL  3
-#define EYEDROPPER 10
-#define ERASER 11
+#define PENCIL 1
+#define ERASER 2
+#define EYEDROPPER 3
 
-// Curseurs
+
+// Curseurs (shape)
 #define SQUARE  0
 #define CIRCLE	1
 #define POINT	2
