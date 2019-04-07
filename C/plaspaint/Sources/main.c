@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
 	initOledBitmap();
 	initSketch();
 	clearSketch(WHITE);
+	updateCursorMatrix(SQUARE); // Une première fois pour initialiser la matrix.
 
 	//Boucle infinie
 	do {
@@ -57,8 +58,11 @@ int main(int argc, char **argv) {
 			// Affichage du skecth sur lequel on travail
 			displaySketch();
 
-			if (mouse[MID_CLICK] == 1)
+			if (mouse[MID_CLICK] == 1){
 				displayMode = MODE_CHROMATIC;
+				updateCursorMatrix(COLOR_SELECTOR);
+				setCurrentColor(WHITE);
+			}
 		}
 
 		// Mode chromatic, choix de la couleur

@@ -69,9 +69,11 @@ const int homeAndChromatic[64][96] = {
 };
 
 
-int cursorX, cursorY, currentColor = RED;
+int cursorX, cursorY;
+int currentColor = RED, currentTool = SQUARE;
 
 static int workingSketch[MAX_Y][MAX_X];
+static int Cursor[MAX_CURSOR_MATRIX][MAX_CURSOR_MATRIX];
 
 
 void pencil(int size, int shape) {
@@ -163,9 +165,7 @@ void initOledBitmap() {
 
 //Function used to color a pixel at a given position (row, col)
 void printPixel(char row, char col, int color) {
-	int buff = 0x00000000;
-
-	buff = color;
+	int buff = color;
 	buff = (buff << 8) | row;
 	buff = (buff << 8) | col;
 
@@ -189,6 +189,7 @@ void displaySketch() {
 }
 
 void displayChromaticScaleColors() {
+	currentColor = WHITE ;
 	for (int i = 0; i < MAX_Y; i++) {
 		for (int j = 0; j < MAX_X; j++) {
 			printPixelAndCursor(i, j, ((homeAndChromatic[i][j]) & 0x0000FFFF));
@@ -200,20 +201,33 @@ void displayChromaticScaleColors() {
 // directement dans cette fonction, et pas après avoir affiché le tableau.
 void printPixelAndCursor(char i, char j, int color) {
 
-	if (!isInCursorZone(i, j))
+	if (!isInCursorZone(j, i)) // Inversé, c'est normal
 		printPixel(i, j, color);
 	else
-		printPixel(i, j, CURSOR_COLOR);
+		printPixel(i, j, currentColor);
 
 }
 
 // Utiliser cette fonction pour tester le tableau de curseur par rapport à la position centrale de ce dernier
-int isInCursorZone(char i, char j) {
+int isInCursorZone(char x, char y) {
 
-	// Pas eu le temps de l'implémenter, pour l'instant on fait comme d'hab
-	if ((j == cursorX) && (i == cursorY))
+	// Test du dépassement de la matrix du curseur en X
+	if((x<(cursorX-CURSOR_CENTER)) || x>(cursorX+CURSOR_CENTER))
+		return 0;
+
+	// Test du dépassement de la matrix du curseur en Y
+	if( (y<(cursorY-CURSOR_CENTER)) || y>(cursorY+CURSOR_CENTER))
+		return 0;
+
+	// Calcul du position du pointeur matrix par rapport à x/y et par rapport à la position du curseur
+	int posX = x - cursorX + CURSOR_CENTER;
+	int posY = y - cursorY + CURSOR_CENTER;
+
+	// Test par rapport à la matrix du curseur
+	if(Cursor[posX][posY])
 		return 1;
-	return 0;
+	else
+		return 0;
 
 }
 
@@ -233,5 +247,95 @@ void updateCursor(int x, int y) {
 }
 
 void setColorAndTool() {
+	//if (on est à gauche, palette)
 	currentColor = ((homeAndChromatic[cursorY][cursorX]) & 0x0000FFFF);
+
+
+	// else (on est à droite, outils)
+	// Faire ici la gestion des différents outils
+
+
+	currentTool = SQUARE;
+	// Fin de la gestion des outils, mis à jours de la matrix du curseur
+
+	updateCursorMatrix(currentTool);
+
+}
+
+void updateCursorMatrix(int tool) {
+
+	switch (tool) {
+
+		case SQUARE : // Un carré
+			clearCursorMatrix();
+
+			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER-i][CURSOR_CENTER-j] = 1;
+			}
+
+
+			break; /* optional */
+
+		case CIRCLE  :
+			clearCursorMatrix();
+
+			break; /* optional */
+
+		case POINT  :
+			clearCursorMatrix();
+
+			break; /* optional */
+
+		case DIAGONAL  :
+			clearCursorMatrix();
+
+			break; /* optional */
+
+		case COLOR_SELECTOR  : // Une grande croix avec un carré au milieu pour voir la couleur
+			clearCursorMatrix();
+
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER] = 1;
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER] = 1;
+			Cursor[CURSOR_CENTER][CURSOR_CENTER+1] = 1;
+			Cursor[CURSOR_CENTER][CURSOR_CENTER-1] = 1;
+
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER-1] = 1;
+			Cursor[CURSOR_CENTER-2][CURSOR_CENTER-2] = 1;
+
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER+1] = 1;
+			Cursor[CURSOR_CENTER-2][CURSOR_CENTER+2] = 1;
+
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER-1] = 1;
+			Cursor[CURSOR_CENTER+2][CURSOR_CENTER-2] = 1;
+
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER+1] = 1;
+			Cursor[CURSOR_CENTER+2][CURSOR_CENTER+2] = 1;
+
+
+			break; /* optional */
+		default : // Par défaut, une petite croix
+			clearCursorMatrix();
+			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER-1] = 1;
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER+1] = 1;
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER-1] = 1;
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER+1] = 1;
+
+	}
+
+}
+
+void clearCursorMatrix(){
+	for(int i=0 ; i<MAX_CURSOR_MATRIX; i++){
+		for (int j=0 ; j<MAX_CURSOR_MATRIX; j++){
+			Cursor[i][j]=0;
+		}
+	}
+}
+
+void setCurrentColor(int color){
+	currentColor = color;
 }
