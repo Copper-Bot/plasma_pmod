@@ -70,7 +70,7 @@ const int homeAndChromatic[64][96] = {
 
 
 int cursorX, cursorY;
-int currentColor = RED, currentTool = SQUARE;
+int currentColor = RED, currentTool = PENCIL, currentShape = SQUARE;
 
 static int workingSketch[MAX_Y][MAX_X];
 static int Cursor[MAX_CURSOR_MATRIX][MAX_CURSOR_MATRIX];
@@ -80,35 +80,12 @@ void pencil(int size, int shape) {
 	paintSketchArea(cursorX, cursorY, shape, size, currentColor);
 }
 
-void stylo() {
-	//Pas la peine de verifier la position du pixel, c'est déjà fait dans le updateCursor()
-	workingSketch[cursorY][cursorX] = currentColor;
-}
-
-void getKeyb(int *keyb) {
-	keyb[APPUI] = (MemoryRead(KEYS_DECODE) >> 8) & 0x00000001;
-	keyb[TOUCHE] = MemoryRead(KEYS_DECODE) & 0x0000000F;
-}
-
 void homeScreen() {
 	for (int i = 0; i < MAX_Y; i++) {
 		for (int j = 0; j < MAX_X; j++) {
 			printPixel(i, j, (((homeAndChromatic[i][j]) >> 16) & 0x0000FFFF));
 		}
 	}
-}
-
-void getMouse(int *mouse) {
-	mouse[X_POS] = MemoryRead(MOUSE_X);
-	mouse[Y_POS] = MemoryRead(MOUSE_Y);
-	mouse[Z_POS] = MemoryRead(MOUSE_Z);
-	mouse[L_CLICK] = MemoryRead(MOUSE_BUTTONS) & 0x00000001;
-	mouse[MID_CLICK] = (MemoryRead(MOUSE_BUTTONS) >> 1) & 0x00000001;
-	mouse[R_CLICK] = (MemoryRead(MOUSE_BUTTONS) >> 2) & 0x00000001;
-}
-
-void eraser(int size) {
-	pencil(size, SQUARE);
 }
 
 void paintSketchArea(int x, int y, int shape, int size, int color) {
@@ -127,6 +104,45 @@ void paintSketchArea(int x, int y, int shape, int size, int color) {
 				}
 			}
 		}
+	}
+
+	if (shape == POINT) {
+		if (pix_on_screen(x, y)) {
+			workingSketch[y][x] = color;
+		}
+	}
+
+	if (shape == DIAGONAL) {
+		for (i = 0; i < 2 * size; i++) {
+			t_pos_y = (y - size) + i;
+			t_pos_x = (x - size) + j;
+			if (pix_on_screen(t_pos_x, t_pos_y)) {
+				workingSketch[t_pos_y][t_pos_x] = color;
+			}
+			j++;
+		}
+	}
+
+
+	if (shape == CROSS) {
+		for (i = 0; i < 2 * size; i++) {
+			t_pos_y = (y - size) + i;
+			t_pos_x = (x - size) + j;
+			if (pix_on_screen(t_pos_x, t_pos_y)) {
+				workingSketch[t_pos_y][t_pos_x] = color;
+			}
+			j++;
+		}
+
+		for (i = 0; i < 2 * size; i++) {
+			t_pos_y = (y - size) + i;
+			t_pos_x = (x - size) + j;
+			if (pix_on_screen(t_pos_x, t_pos_y)) {
+				workingSketch[t_pos_y][t_pos_x] = color;
+			}
+			j--;
+		}
+
 	}
 }
 
@@ -246,28 +262,24 @@ void updateCursor(int x, int y) {
 		cursorY = MAX_Y - 1;
 }
 
-void setColorAndTool() {
-	//if (on est à gauche, palette)
+void updateColor() {
 	currentColor = ((homeAndChromatic[cursorY][cursorX]) & 0x0000FFFF);
-
-
-	// else (on est à droite, outils)
-	// Faire ici la gestion des différents outils
-
-
-	currentTool = SQUARE;
-	// Fin de la gestion des outils, mis à jours de la matrix du curseur
-
-	updateCursorMatrix(currentTool);
-
 }
 
-void updateCursorMatrix(int tool) {
+void getColor(){
+	currentColor = (workingSketch[cursorY][cursorX]);
+}
 
+void eraser(int size) {
+	paintSketchArea(cursorX, cursorY, SQUARE, size, WHITE);
+}
+
+
+void updateCursorMatrix(int tool) {
+	clearCursorMatrix();
 	switch (tool) {
 
 		case SQUARE : // Un carré
-			clearCursorMatrix();
 
 			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
 
@@ -279,23 +291,66 @@ void updateCursorMatrix(int tool) {
 
 			break; /* optional */
 
-		case CIRCLE  :
-			clearCursorMatrix();
-
-			break; /* optional */
-
 		case POINT  :
-			clearCursorMatrix();
+
+			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
 
 			break; /* optional */
 
 		case DIAGONAL  :
-			clearCursorMatrix();
+			Cursor[CURSOR_CENTER-4][CURSOR_CENTER-4] = 1;
+			Cursor[CURSOR_CENTER-3][CURSOR_CENTER-3] = 1;
+			Cursor[CURSOR_CENTER-2][CURSOR_CENTER-2] = 1;
+			Cursor[CURSOR_CENTER-1][CURSOR_CENTER-1] = 1;
+			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
+			Cursor[CURSOR_CENTER+1][CURSOR_CENTER+1] = 1;
+			Cursor[CURSOR_CENTER+2][CURSOR_CENTER+2] = 1;
+			Cursor[CURSOR_CENTER+3][CURSOR_CENTER+3] = 1;
+			Cursor[CURSOR_CENTER+4][CURSOR_CENTER+4] = 1;
+			break; /* optional */
+
+		case ERASER  :
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER-i][CURSOR_CENTER-j] = 1;
+			}
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER+1-i][CURSOR_CENTER+1-j] = 1;
+			}
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER+2-i][CURSOR_CENTER+2-j] = 1;
+			}
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER+3-i][CURSOR_CENTER+3-j] = 1;
+			}
+
+			break; /* optional */
+
+		case EYEDROPPER  :
+
+			for(int i = -2 ; i<= 2 ; i++){
+				for (int j = -2 ; j<=2 ; j++)
+					Cursor[CURSOR_CENTER-i][CURSOR_CENTER-j] = 1;
+			}
+
+			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 0;
+
+			Cursor[CURSOR_CENTER+3][CURSOR_CENTER+3] = 1;
+			Cursor[CURSOR_CENTER+4][CURSOR_CENTER+4] = 1;
+			Cursor[CURSOR_CENTER+5][CURSOR_CENTER+5] = 1;
+			Cursor[CURSOR_CENTER+6][CURSOR_CENTER+6] = 1;
+
 
 			break; /* optional */
 
 		case COLOR_SELECTOR  : // Une grande croix avec un carré au milieu pour voir la couleur
-			clearCursorMatrix();
 
 			Cursor[CURSOR_CENTER+1][CURSOR_CENTER] = 1;
 			Cursor[CURSOR_CENTER-1][CURSOR_CENTER] = 1;
@@ -317,7 +372,6 @@ void updateCursorMatrix(int tool) {
 
 			break; /* optional */
 		default : // Par défaut, une petite croix
-			clearCursorMatrix();
 			Cursor[CURSOR_CENTER][CURSOR_CENTER] = 1;
 			Cursor[CURSOR_CENTER-1][CURSOR_CENTER-1] = 1;
 			Cursor[CURSOR_CENTER-1][CURSOR_CENTER+1] = 1;
@@ -338,4 +392,27 @@ void clearCursorMatrix(){
 
 void setCurrentColor(int color){
 	currentColor = color;
+}
+
+void setCurrentTool(int tool){
+	currentTool = tool;
+
+	if(currentTool == PENCIL)
+		updateCursorMatrix(currentShape);
+	else
+		updateCursorMatrix(currentTool);
+
+}
+
+int getCurrentTool(){
+	return currentTool;
+}
+
+void setShape(int shape){
+	currentShape = shape;
+	updateCursorMatrix(shape);
+}
+
+int getShape(){
+	return currentShape;
 }

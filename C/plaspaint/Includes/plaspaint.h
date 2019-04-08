@@ -47,19 +47,16 @@
 
 
 // Curseurs (shape)
-#define SQUARE  0
-#define CIRCLE	1
-#define POINT	2
-#define DIAGONAL 3
+#define SQUARE  20
+#define POINT	21
+#define DIAGONAL 22
+#define CROSS 23
 
 #define COLOR_SELECTOR 10
 
 
 void pencil(int size, int shape);
-void stylo();
-void getKeyb(int *keyb);
 void homeScreen();
-void getMouse(int *mouse);
 void eraser(int size);
 void paintSketchArea(int x, int y, int shape, int size, int color);
 void paintAllBackground(int color);
@@ -77,7 +74,12 @@ void updateCursor(int x, int y);
 void updateCursorMatrix(int tool);
 void clearCursorMatrix();
 void displayChromaticScaleColors();
-void setColorAndTool();
+void updateColor();
 void setCurrentColor(int color);
+void setCurrentTool(int tool);
+int getCurrentTool();
+void setShape(int shape);
+int getShape();
+void getColor();
 
 #endif
